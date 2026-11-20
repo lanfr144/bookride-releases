@@ -98,3 +98,21 @@ $ python app.py     # when assets/photo.jpg is missing
 {"@timestamp": "2026-11-20T16:01:23Z", "service": "bookride", "level": "ERROR", "message": "app_start_failed", "version": "3.0.0", "app_env": "dev", "reason": "photo file not found: assets/photo.jpg (key PHOTO_PATH, environment 'dev')"}
 ERROR: photo file not found: assets/photo.jpg (key PHOTO_PATH, environment 'dev')
 ```
+
+## 2.2 Release strategy: canary (simulated with files)
+
+The three production servers are simulated by three files, as in Unit 04b:
+`servers/server1/version.txt`, `servers/server2/version.txt`, `servers/server3/version.txt`.
+Each file contains the version that the server runs. One commit = one deployment step.
+
+| Step | Commit | server1 | server2 | server3 |
+|---|---|---|---|---|
+| 0 | `Canary step 0: all servers run v2.0.0` | v2.0.0 | v2.0.0 | v2.0.0 |
+| 1 | `Canary step 1: server1 runs v3.0.0` | **v3.0.0 (canary)** | v2.0.0 | v2.0.0 |
+| 2 | `Canary step 2: promoted, all servers run v3.0.0` | v3.0.0 | v3.0.0 | v3.0.0 |
+
+Why canary: v3.0.0 is a breaking change (photo required). Only one server out of three
+(about a third of the traffic) receives it first; the two others keep v2.0.0. If the canary
+shows errors, one `git revert` of step 1 brings server1 back to v2.0.0 and no other server is touched.
+
+**What is live after the last step: v3.0.0 runs on all three servers (server1, server2, server3); v2.0.0 is not served any more.**
