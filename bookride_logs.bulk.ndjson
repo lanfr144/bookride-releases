@@ -1,0 +1,40 @@
+{"index": {"_index": "bookride-logs"}}
+{"@timestamp": "2026-11-02T08:01:12Z", "service": "booking", "level": "INFO", "message": "Booking created for ride R-1001"}
+{"index": {"_index": "bookride-logs"}}
+{"@timestamp": "2026-11-02T08:03:40Z", "service": "payment", "level": "INFO", "message": "Payment accepted for booking B-2001"}
+{"index": {"_index": "bookride-logs"}}
+{"@timestamp": "2026-11-02T08:15:05Z", "service": "auth", "level": "INFO", "message": "User login successful"}
+{"index": {"_index": "bookride-logs"}}
+{"@timestamp": "2026-11-02T09:02:31Z", "service": "payment", "level": "ERROR", "message": "Payment declined for booking B-2002: insufficient funds", "booking_id": "B-2002", "user_id": "U-104", "amount": 24.50, "currency": "EUR", "error_code": "INSUFFICIENT_FUNDS", "duration_ms": 412, "env": "prod", "version": "3.0.0"}
+{"index": {"_index": "bookride-logs"}}
+{"@timestamp": "2026-11-02T09:20:48Z", "service": "notification", "level": "INFO", "message": "Confirmation email sent for booking B-2001"}
+{"index": {"_index": "bookride-logs"}}
+{"@timestamp": "2026-11-02T10:05:17Z", "service": "auth", "level": "WARN", "message": "Login failed: wrong password"}
+{"index": {"_index": "bookride-logs"}}
+{"@timestamp": "2026-11-02T11:45:09Z", "service": "booking", "level": "ERROR", "message": "Booking failed: no driver available for ride R-1004"}
+{"index": {"_index": "bookride-logs"}}
+{"@timestamp": "2026-11-02T13:10:22Z", "service": "search", "level": "INFO", "message": "Search rides from Luxembourg to Esch-sur-Alzette"}
+{"index": {"_index": "bookride-logs"}}
+{"@timestamp": "2026-11-02T14:32:56Z", "service": "payment", "level": "WARN", "message": "Payment retry scheduled for booking B-2003"}
+{"index": {"_index": "bookride-logs"}}
+{"@timestamp": "2026-11-02T16:48:03Z", "service": "booking", "level": "INFO", "message": "Booking cancelled by user for ride R-1005"}
+{"index": {"_index": "bookride-logs"}}
+{"@timestamp": "2026-11-03T07:55:44Z", "service": "auth", "level": "INFO", "message": "User login successful"}
+{"index": {"_index": "bookride-logs"}}
+{"@timestamp": "2026-11-03T08:12:19Z", "service": "booking", "level": "INFO", "message": "Booking created for ride R-1006"}
+{"index": {"_index": "bookride-logs"}}
+{"@timestamp": "2026-11-03T08:14:02Z", "service": "payment", "level": "ERROR", "message": "Card declined by the bank for booking B-2006"}
+{"index": {"_index": "bookride-logs"}}
+{"@timestamp": "2026-11-03T09:30:27Z", "service": "notification", "level": "ERROR", "message": "SMS gateway timeout while sending booking reminder"}
+{"index": {"_index": "bookride-logs"}}
+{"@timestamp": "2026-11-03T10:02:50Z", "service": "search", "level": "INFO", "message": "Search rides from Differdange to Luxembourg"}
+{"index": {"_index": "bookride-logs"}}
+{"@timestamp": "2026-11-03T11:18:36Z", "service": "payment", "level": "INFO", "message": "Payment accepted for booking B-2007"}
+{"index": {"_index": "bookride-logs"}}
+{"@timestamp": "2026-11-03T12:40:11Z", "service": "booking", "level": "WARN", "message": "Driver late for ride R-1006"}
+{"index": {"_index": "bookride-logs"}}
+{"@timestamp": "2026-11-03T14:05:59Z", "service": "payment", "level": "ERROR", "message": "Payment declined for booking B-2008: card expired"}
+{"index": {"_index": "bookride-logs"}}
+{"@timestamp": "2026-11-03T15:22:08Z", "service": "auth", "level": "ERROR", "message": "Account locked after 5 failed logins"}
+{"index": {"_index": "bookride-logs"}}
+{"@timestamp": "2026-11-03T17:01:33Z", "service": "notification", "level": "INFO", "message": "Receipt email sent for booking B-2007"}

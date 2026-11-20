@@ -116,3 +116,48 @@ Why canary: v3.0.0 is a breaking change (photo required). Only one server out of
 shows errors, one `git revert` of step 1 brings server1 back to v2.0.0 and no other server is touched.
 
 **What is live after the last step: v3.0.0 runs on all three servers (server1, server2, server3); v2.0.0 is not served any more.**
+
+### 2.2 Terminal output: tags and history
+
+```text
+$ git tag
+v1.0.0
+v1.1.0
+v2.0.0
+v3.0.0
+
+$ git log --oneline --graph --all
+* bd08d72 (HEAD -> main, origin/main) Canary step 2: promoted, all servers run v3.0.0
+* 60a5841 Canary step 1: server1 runs v3.0.0 (1 server out of 3)
+* e1a1395 Canary step 0: all servers run v2.0.0mkdir
+* 538c0ee (tag: v3.0.0) v3.0.0: BREAKING CHANGE - photo required (assets/photo.jpg, new key PHOTO_PATH)
+* 5b17d31 (tag: v2.0.0) v2.0.0: BREAKING CHANGE - key DB_URL renamed DATABASE_URL in configuration and code
+* a6fe5b3 (tag: v1.1.0) v1.1.0: new feature - the app writes one JSON log line when it starts
+* 0388f33 (tag: v1.0.0) v1.0.0: first version - configuration by environment (dev, staging, prod)
+```
+
+## 2.3 Observability: Elasticsearch + Kibana
+
+| File | Role |
+|---|---|
+| `docker-compose.yml` | Elasticsearch 8 (single node, security enabled) + Kibana on the same Docker network. Kibana connects as `kibana_system`, not as `elastic`; a one-shot `setup` job gives this account its password |
+| `.env` / `.env.example` | passwords (`ELASTIC_PASSWORD`, `KIBANA_PASSWORD`) and host ports (`ES_PORT_EXPOSE`, `KIBANA_PORT_EXPOSE`) |
+| `start.sh` | checks `.env` and the ports, starts the stack and waits for the healthchecks; stops everything when the start fails |
+| `bookride_logs.bulk.ndjson` | the 20 log entries (2 and 3 November 2026) |
+| `load_logs.sh` | loads the file into the index `bookride-logs` with the `_bulk` API |
+| `run_queries.sh` | runs the three requests and writes them with their output in `queries.md` |
+| `create_dashboard.sh` + `kibana/bookride-dashboard.ndjson` | data view `bookride-logs` (time field `@timestamp`) and dashboard with two panels: logs per service, logs per level |
+| `screenshots/kibana_dashboard.png` | screenshot of the dashboard |
+
+```bash
+./start.sh               # Elasticsearch + Kibana (first start: 1 to 3 minutes)
+./load_logs.sh           # 20 documents in bookride-logs
+./run_queries.sh         # writes queries.md
+./create_dashboard.sh    # data view + dashboard, then open the printed URL
+docker compose down      # stop (add -v to delete the data)
+```
+
+Kibana: http://localhost:5602 (user `elastic`, password `ELASTIC_PASSWORD` of `.env`).
+The dashboard opens with the time range 2 to 3 November 2026.
+
+![Kibana dashboard](screenshots/kibana_dashboard.png)
