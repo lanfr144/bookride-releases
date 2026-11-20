@@ -161,3 +161,54 @@ Kibana: http://localhost:5602 (user `elastic`, password `ELASTIC_PASSWORD` of `.
 The dashboard opens with the time range 2 to 3 November 2026.
 
 ![Kibana dashboard](screenshots/kibana_dashboard.png)
+
+## 2.4 Rollback and recovery
+
+### Revert of a faulty commit on `main`
+
+The commit `2d4374a` introduced a bug (the mode banner was inverted: `prod` showed `[DEBUG MODE]`).
+It is undone with `git revert --no-edit HEAD`: a new commit (`61e4482`) applies the opposite change.
+Nothing is rewritten: the bug commit and its undo are both visible.
+
+```text
+$ git log --oneline
+61e4482 (HEAD -> main, origin/main) Revert "Bug: mode banner inverted (prod shows DEBUG MODE)"
+2d4374a Bug: mode banner inverted (prod shows DEBUG MODE)
+fd46b0f 2.3 Observability: Elasticsearch + Kibana, bookride-logs index, queries and dashboard
+e077564 Canary: server1 leaves the canary status, all servers run v3.0.0
+bd08d72 Canary step 2: promoted, all servers run v3.0.0
+60a5841 Canary step 1: server1 runs v3.0.0 (1 server out of 3)
+e1a1395 Canary step 0: all servers run v2.0.0mkdir
+538c0ee (tag: v3.0.0) v3.0.0: BREAKING CHANGE - photo required (assets/photo.jpg, new key PHOTO_PATH)
+5b17d31 (tag: v2.0.0) v2.0.0: BREAKING CHANGE - key DB_URL renamed DATABASE_URL in configuration and code
+a6fe5b3 (tag: v1.1.0) v1.1.0: new feature - the app writes one JSON log line when it starts
+0388f33 (tag: v1.0.0) v1.0.0: first version - configuration by environment (dev, staging, prod)
+```
+
+### Lost commit recovered with the reflog (local branch `experiment`)
+
+On the local branch `experiment` the commit `0477fba` was made, then removed with
+`git reset --hard HEAD~1`. It was no longer in `git log`, but the reflog still showed it,
+and `git reset --hard 0477fba` brought it back.
+
+```text
+$ git reflog
+61e4482 HEAD@{0}: checkout: moving from experiment to main
+0477fba HEAD@{1}: reset: moving to 0477fba
+61e4482 HEAD@{2}: reset: moving to HEAD~1
+0477fba HEAD@{3}: commit: Experiment: note an idea
+61e4482 HEAD@{4}: checkout: moving from main to experiment
+61e4482 HEAD@{5}: revert: Revert "Bug: mode banner inverted (prod shows DEBUG MODE)"
+```
+
+Reading from the bottom: revert of the bug on `main`, switch to `experiment`,
+commit `0477fba`, hard reset (commit lost), second reset to `0477fba` (commit recovered), back to `main`.
+
+### When to use revert, when reset is acceptable
+
+- `git revert` is used for a commit that is already pushed or shared (for example on `main`): it adds a
+  new commit that undoes the change, so the history stays intact and nobody has to repair their copy.
+- `git reset --hard` moves the branch back and removes commits from its history. It is acceptable only
+  for local commits that were never pushed (a private branch such as `experiment`), where nobody else depends on them.
+- Using reset on a pushed branch would require a forced push and would break the copies of the others.
+- After a mistaken reset the commit is not lost at once: `git reflog` still lists it and `git reset --hard <id>` restores it.
