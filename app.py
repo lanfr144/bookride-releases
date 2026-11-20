@@ -86,7 +86,7 @@ def main():
     log_event(app, "INFO", "app_started", app_env=env, debug=debug,
               database_url=mask_url(database_url), photo_path=photo_path)
     print(f"{app['name']} {app['version']} - environment: {env}")
-    if debug:
+    if not debug:
         print("[DEBUG MODE] Verbose logs enabled")
     else:
         print("[PRODUCTION MODE] Logging minimal")
