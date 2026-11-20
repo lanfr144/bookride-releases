@@ -3,6 +3,18 @@
 Newest version first. Versions follow MAJOR.MINOR.PATCH:
 MAJOR = breaking change, MINOR = new feature, PATCH = fix.
 
+## v3.0.0 - BREAKING CHANGE: a photo is required
+
+**Breaking change: a `config.yaml` written for v2.x does not work any more (key `PHOTO_PATH` missing).**
+
+- New file `assets/photo.jpg`.
+- New key `PHOTO_PATH` in every block of `config.yaml` (`dev`, `staging`, `prod`).
+- `app.py` prints the path of the photo; the JSON log line has the new field `photo_path`.
+- The app stops with a clear error (exit code 1) when the key `PHOTO_PATH` is missing
+  or when the file does not exist.
+- How to migrate: add `PHOTO_PATH: assets/photo.jpg` to each block of your `config.yaml`
+  and keep the file `assets/photo.jpg` next to `app.py`.
+
 ## v2.0.0 - BREAKING CHANGE: `DB_URL` renamed `DATABASE_URL`
 
 **Breaking change: an existing `config.yaml` or `.env` written for v1.x does not work any more.**

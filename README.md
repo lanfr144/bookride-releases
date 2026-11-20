@@ -19,7 +19,8 @@ python app.py
 | `.env` | **no** (`.gitignore`) | `KEY=value` lines behind the references |
 | `.env.example` | yes | same keys with placeholders (`<password>`); used automatically when `.env` is missing |
 | `config_loader.py` | yes | `read_yaml_section()` = the single method that reads the YAML and resolves `${...}`; `load_config()` selects the block from `APP_ENV` (default `dev`) |
-| `app.py` | yes | writes one JSON log line (since v1.1.0), then prints the mode banner and the database URL with the password masked |
+| `app.py` | yes | writes one JSON log line (since v1.1.0), then prints the mode banner and the database URL with the password masked; since v3.0.0 also checks and prints the photo path |
+| `assets/photo.jpg` | yes | the photo required since v3.0.0 (key `PHOTO_PATH`) |
 
 Only fake values are used: there is no real database and no real API key.
 
@@ -78,4 +79,22 @@ $ python app.py
 bookride 2.0.0 - environment: dev
 [DEBUG MODE] Verbose logs enabled
 Connecting to DB: postgresql://dev_user:****@localhost:5432/bookride_dev
+```
+
+## Breaking change in v3.0.0: a photo is required
+
+New file `assets/photo.jpg` and new key `PHOTO_PATH` in every block of `config.yaml`.
+The app prints the photo path and stops with a clear error when the key or the file is missing.
+
+```text
+$ python app.py
+{"@timestamp": "2026-11-20T16:01:23Z", "service": "bookride", "level": "INFO", "message": "app_started", "version": "3.0.0", "app_env": "dev", "debug": true, "database_url": "postgresql://dev_user:****@localhost:5432/bookride_dev", "photo_path": "assets/photo.jpg"}
+bookride 3.0.0 - environment: dev
+[DEBUG MODE] Verbose logs enabled
+Connecting to DB: postgresql://dev_user:****@localhost:5432/bookride_dev
+Photo: assets/photo.jpg
+
+$ python app.py     # when assets/photo.jpg is missing
+{"@timestamp": "2026-11-20T16:01:23Z", "service": "bookride", "level": "ERROR", "message": "app_start_failed", "version": "3.0.0", "app_env": "dev", "reason": "photo file not found: assets/photo.jpg (key PHOTO_PATH, environment 'dev')"}
+ERROR: photo file not found: assets/photo.jpg (key PHOTO_PATH, environment 'dev')
 ```
