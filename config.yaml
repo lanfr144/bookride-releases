@@ -1,4 +1,4 @@
-# config.yaml - Book&Ride configuration (version 1.0.0)
+# config.yaml - Book&Ride configuration (version 1.1.0)
 #
 # No secret in this file: every sensitive value is a reference ${NAME}.
 # The real value of NAME is read from .env (not in git) or, when .env does
@@ -9,7 +9,7 @@
 # Read by app.py: read_yaml_section("app")
 app:
   name: bookride
-  version: 1.0.0
+  version: 1.1.0
 
 # Read by config_loader.load_config(): read_yaml_section("environments", APP_ENV)
 environments:

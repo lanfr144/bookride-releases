@@ -19,11 +19,13 @@ python app.py
 | `.env` | **no** (`.gitignore`) | `KEY=value` lines behind the references |
 | `.env.example` | yes | same keys with placeholders (`<password>`); used automatically when `.env` is missing |
 | `config_loader.py` | yes | `read_yaml_section()` = the single method that reads the YAML and resolves `${...}`; `load_config()` selects the block from `APP_ENV` (default `dev`) |
-| `app.py` | yes | prints the mode banner and the database URL with the password masked |
+| `app.py` | yes | writes one JSON log line (since v1.1.0), then prints the mode banner and the database URL with the password masked |
 
 Only fake values are used: there is no real database and no real API key.
 
 ## 2.1 Configuration by environment - terminal output
+
+Output captured at v1.0.0.
 
 ```text
 $ python app.py
@@ -45,4 +47,22 @@ $ APP_ENV=test python app.py
 ERROR: APP_ENV=test : value not known. Choose one of: dev, staging, prod
 $ echo $?
 1
+```
+
+## Start-up log line (since v1.1.0)
+
+The application writes one log line in JSON on standard output when it starts.
+The first four fields (`@timestamp`, `service`, `level`, `message`) are the ones
+used later in Elasticsearch; the password of the database URL is masked.
+
+```text
+$ python app.py
+{"@timestamp": "2026-11-20T15:42:54Z", "service": "bookride", "level": "INFO", "message": "app_started", "version": "1.1.0", "app_env": "dev", "debug": true, "db_url": "postgresql://dev_user:****@localhost:5432/bookride_dev"}
+bookride 1.1.0 - environment: dev
+[DEBUG MODE] Verbose logs enabled
+Connecting to DB: postgresql://dev_user:****@localhost:5432/bookride_dev
+
+$ APP_ENV=test python app.py
+{"@timestamp": "2026-11-20T15:42:54Z", "service": "bookride", "level": "ERROR", "message": "app_start_failed", "version": "1.1.0", "app_env": "test", "reason": "APP_ENV=test : value not known. Choose one of: dev, staging, prod"}
+ERROR: APP_ENV=test : value not known. Choose one of: dev, staging, prod
 ```
