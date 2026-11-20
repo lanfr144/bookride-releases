@@ -1,0 +1,11 @@
+# .gitignore - what must never be pushed
+
+# Secrets: every .env file stays on the machine ...
+.env
+.env.*
+# ... except the template with placeholders
+!.env.example
+
+# Python cache
+__pycache__/
+*.pyc

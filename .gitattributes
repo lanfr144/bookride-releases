@@ -1,0 +1,4 @@
+# Same line endings (LF) for everybody, Windows included
+* text=auto eol=lf
+*.jpg binary
+*.png binary
