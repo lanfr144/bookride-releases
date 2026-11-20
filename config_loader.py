@@ -4,7 +4,7 @@ config_loader.py - reads config.yaml for the Book&Ride application.
 How the configuration works (read this first)
 ---------------------------------------------
 1. config.yaml  : describes the environments (dev, staging, prod).
-                  It contains NO secret, only references such as ${DEV_DB_URL}.
+                  It contains NO secret, only references such as ${DEV_DATABASE_URL}.
 2. .env         : KEY=value lines with the values behind the references.
                   This file is NOT in git (see .gitignore).
 3. .env.example : same keys as .env but with placeholders (<password>).

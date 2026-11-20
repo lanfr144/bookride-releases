@@ -1,5 +1,5 @@
 """
-app.py - Book&Ride demo application (version 1.1.0)
+app.py - Book&Ride demo application (version 2.0.0)
 
 What it does when it starts
 ---------------------------
@@ -63,7 +63,7 @@ def main():
     try:
         app = read_yaml_section("app")          # common method, 'app' block
         cfg = load_config()                     # common method, block of APP_ENV
-        database_url = require(cfg, "DB_URL")
+        database_url = require(cfg, "DATABASE_URL")
         debug = require(cfg, "DEBUG") is True      # YAML true -> debug mode
     except ConfigError as error:
         log_event(app, "ERROR", "app_start_failed", app_env=env, reason=str(error))
@@ -71,7 +71,7 @@ def main():
         return 1
 
     log_event(app, "INFO", "app_started", app_env=env, debug=debug,
-              db_url=mask_url(database_url))
+              database_url=mask_url(database_url))
     print(f"{app['name']} {app['version']} - environment: {env}")
     if debug:
         print("[DEBUG MODE] Verbose logs enabled")

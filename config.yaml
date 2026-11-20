@@ -1,4 +1,4 @@
-# config.yaml - Book&Ride configuration (version 1.1.0)
+# config.yaml - Book&Ride configuration (version 2.0.0)
 #
 # No secret in this file: every sensitive value is a reference ${NAME}.
 # The real value of NAME is read from .env (not in git) or, when .env does
@@ -9,21 +9,21 @@
 # Read by app.py: read_yaml_section("app")
 app:
   name: bookride
-  version: 1.1.0
+  version: 2.0.0
 
 # Read by config_loader.load_config(): read_yaml_section("environments", APP_ENV)
 environments:
   dev:
-    DB_URL: ${DEV_DB_URL}
+    DATABASE_URL: ${DEV_DATABASE_URL}
     API_KEY: ${DEV_API_KEY}
     DEBUG: true
 
   staging:
-    DB_URL: ${STAGING_DB_URL}
+    DATABASE_URL: ${STAGING_DATABASE_URL}
     API_KEY: ${STAGING_API_KEY}
     DEBUG: true
 
   prod:
-    DB_URL: ${PROD_DB_URL}
+    DATABASE_URL: ${PROD_DATABASE_URL}
     API_KEY: ${PROD_API_KEY}
     DEBUG: false

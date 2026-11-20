@@ -3,6 +3,18 @@
 Newest version first. Versions follow MAJOR.MINOR.PATCH:
 MAJOR = breaking change, MINOR = new feature, PATCH = fix.
 
+## v2.0.0 - BREAKING CHANGE: `DB_URL` renamed `DATABASE_URL`
+
+**Breaking change: an existing `config.yaml` or `.env` written for v1.x does not work any more.**
+
+- In `config.yaml` the key `DB_URL` is renamed `DATABASE_URL` in every block (`dev`, `staging`, `prod`).
+- In the code, `app.py` reads `DATABASE_URL`; the JSON log line has the field `database_url` (was `db_url`).
+- In `.env` / `.env.example` the variables are renamed the same way:
+  `DEV_DB_URL` -> `DEV_DATABASE_URL`, `STAGING_DB_URL` -> `STAGING_DATABASE_URL`, `PROD_DB_URL` -> `PROD_DATABASE_URL`.
+- How to migrate: rename the three variables in your `.env`
+  (`sed -i 's/_DB_URL=/_DATABASE_URL=/' .env`). With the old names the app stops with
+  "variable DEV_DATABASE_URL is not defined".
+
 ## v1.1.0 - new feature: start-up log line
 
 - `app.py` writes ONE log line in JSON on standard output when it starts

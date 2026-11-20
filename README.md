@@ -15,7 +15,7 @@ python app.py
 
 | File | In git? | Role |
 |---|---|---|
-| `config.yaml` | yes | three blocks `dev`, `staging`, `prod` with `DB_URL`, `API_KEY`, `DEBUG`. No secret: values are references such as `${DEV_DB_URL}` |
+| `config.yaml` | yes | three blocks `dev`, `staging`, `prod` with `DATABASE_URL` (named `DB_URL` before v2.0.0), `API_KEY`, `DEBUG`. No secret: values are references such as `${DEV_DATABASE_URL}` |
 | `.env` | **no** (`.gitignore`) | `KEY=value` lines behind the references |
 | `.env.example` | yes | same keys with placeholders (`<password>`); used automatically when `.env` is missing |
 | `config_loader.py` | yes | `read_yaml_section()` = the single method that reads the YAML and resolves `${...}`; `load_config()` selects the block from `APP_ENV` (default `dev`) |
@@ -65,4 +65,17 @@ Connecting to DB: postgresql://dev_user:****@localhost:5432/bookride_dev
 $ APP_ENV=test python app.py
 {"@timestamp": "2026-11-20T15:42:54Z", "service": "bookride", "level": "ERROR", "message": "app_start_failed", "version": "1.1.0", "app_env": "test", "reason": "APP_ENV=test : value not known. Choose one of: dev, staging, prod"}
 ERROR: APP_ENV=test : value not known. Choose one of: dev, staging, prod
+```
+
+## Breaking change in v2.0.0: `DB_URL` renamed `DATABASE_URL`
+
+The key is renamed in `config.yaml`, in the code and in `.env` / `.env.example`
+(see `RELEASE_NOTES.md` for the migration). Output at v2.0.0:
+
+```text
+$ python app.py
+{"@timestamp": "2026-11-20T15:54:39Z", "service": "bookride", "level": "INFO", "message": "app_started", "version": "2.0.0", "app_env": "dev", "debug": true, "database_url": "postgresql://dev_user:****@localhost:5432/bookride_dev"}
+bookride 2.0.0 - environment: dev
+[DEBUG MODE] Verbose logs enabled
+Connecting to DB: postgresql://dev_user:****@localhost:5432/bookride_dev
 ```
